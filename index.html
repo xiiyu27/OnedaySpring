@@ -110,6 +110,7 @@
         }
 
         /* ---------- 画廊弹窗样式 ---------- */
+/* ---------- 画廊弹窗样式（适配手机屏幕） ---------- */
         .gallery-modal {
             display: none;
             position: fixed;
@@ -117,71 +118,70 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.9);
             z-index: 1000;
-            align-items: center;
-            justify-content: center;
             flex-direction: column;
         }
-
+        
         .gallery-modal.active {
             display: flex;
         }
-
+        
         .gallery-close {
             position: absolute;
-            top: 20px;
-            right: 30px;
-            font-size: 32px;
+            top: 15px;
+            right: 20px;
+            font-size: 36px;
             color: #fff;
             cursor: pointer;
             background: none;
             border: none;
             z-index: 1001;
+            line-height: 1;
         }
-
-        .gallery-container {
-            display: flex;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-            width: 90%;
-            max-width: 900px;
-            max-height: 80vh;
-            border-radius: 6px;
-            scroll-behavior: smooth;
-        }
-
-        .gallery-container img {
-            scroll-snap-align: center;
-            flex: 0 0 auto;
+        
+        /* 图片显示区域，可上下滚动 */
+        .gallery-image-wrapper {
+            flex: 1;
             width: 100%;
-            max-height: 80vh;
-            object-fit: contain;
-            display: block;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            -webkit-overflow-scrolling: touch;
         }
-
+        
+        .gallery-image-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+            pointer-events: auto; /* 保证图片本身可点击拖动等 */
+        }
+        
+        /* 左右切换按钮容器 */
         .gallery-nav {
             display: flex;
-            gap: 40px;
-            margin-top: 20px;
+            justify-content: center;
+            gap: 50px;
+            padding: 15px 0 25px;
         }
-
+        
         .gallery-nav button {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.25);
             border: none;
             color: white;
-            font-size: 32px;
-            width: 50px;
-            height: 50px;
+            font-size: 28px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             cursor: pointer;
-            line-height: 50px;
+            line-height: 48px;
             text-align: center;
+            transition: background 0.2s;
         }
-
+        
         .gallery-nav button:hover {
-            background: rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.5);
         }
     </style>
 </head>
@@ -226,10 +226,12 @@
     </article>
 </section>
 
-<!-- 图片画廊弹窗 -->
+<!-- 图片画廊弹窗（优化版） -->
 <div id="gallery-modal" class="gallery-modal">
     <button class="gallery-close">&times;</button>
-    <div class="gallery-container" id="gallery-images"></div>
+    <div class="gallery-image-wrapper" id="gallery-image-wrapper">
+        <img id="gallery-current-image" src="" alt="作品截图">
+    </div>
     <div class="gallery-nav">
         <button id="gallery-prev">❮</button>
         <button id="gallery-next">❯</button>
@@ -242,93 +244,67 @@
 
 <script>
     // 画廊逻辑
-    const modal = document.getElementById('gallery-modal');
-    const galleryContainer = document.getElementById('gallery-images');
-    const prevBtn = document.getElementById('gallery-prev');
-    const nextBtn = document.getElementById('gallery-next');
-    const closeBtn = document.querySelector('.gallery-close');
+// 画廊逻辑（适配手机屏幕）
+const modal = document.getElementById('gallery-modal');
+const currentImg = document.getElementById('gallery-current-image');
+const prevBtn = document.getElementById('gallery-prev');
+const nextBtn = document.getElementById('gallery-next');
+const closeBtn = document.querySelector('.gallery-close');
+const imageWrapper = document.getElementById('gallery-image-wrapper');
 
-    let currentImageIndex = 0;
-    let images = [];
+let images = [];
+let currentIndex = 0;
 
-    // 打开画廊
-    document.querySelectorAll('.gallery-trigger').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const imagesStr = this.getAttribute('data-images');
-            if (!imagesStr) return;
-            images = imagesStr.split(',').map(s => s.trim());
-
-            // 清空并填充图片
-            galleryContainer.innerHTML = '';
-            images.forEach((src, index) => {
-                const img = document.createElement('img');
-                img.src = src;
-                img.alt = `图片 ${index + 1}`;
-                img.onerror = () => { img.alt = '图片加载失败'; };
-                galleryContainer.appendChild(img);
-            });
-
-            // 显示弹窗，并定位到第一张
-            modal.classList.add('active');
-            galleryContainer.scrollLeft = 0;
-            currentImageIndex = 0;
-        });
+// 打开画廊
+document.querySelectorAll('.gallery-trigger').forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const imagesStr = this.getAttribute('data-images');
+        if (!imagesStr) return;
+        images = imagesStr.split(',').map(s => s.trim());
+        currentIndex = 0;
+        updateImage();
+        modal.classList.add('active');
     });
+});
 
-    // 关闭画廊
-    function closeGallery() {
-        modal.classList.remove('active');
-    }
-    closeBtn.addEventListener('click', closeGallery);
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) closeGallery();
-    });
+// 更新显示的图片
+function updateImage() {
+    if (images.length === 0) return;
+    currentImg.src = images[currentIndex];
+    currentImg.alt = `图片 ${currentIndex + 1}`;
+    // 每次切换图片后，滚动回到顶部（长图从最上面开始显示）
+    imageWrapper.scrollTop = 0;
+}
 
-    // 切换图片（定位到某一张）
-    function scrollToImage(index) {
-        if (images.length === 0) return;
-        if (index < 0) index = 0;
-        if (index >= images.length) index = images.length - 1;
-        const imgElements = galleryContainer.children;
-        if (imgElements.length > 0 && imgElements[index]) {
-            imgElements[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-        }
-        currentImageIndex = index;
-    }
+// 关闭画廊
+function closeGallery() {
+    modal.classList.remove('active');
+}
+closeBtn.addEventListener('click', closeGallery);
+modal.addEventListener('click', function(e) {
+    if (e.target === modal) closeGallery();
+});
 
-    prevBtn.addEventListener('click', () => {
-        scrollToImage(currentImageIndex - 1);
-    });
-    nextBtn.addEventListener('click', () => {
-        scrollToImage(currentImageIndex + 1);
-    });
+// 左右切换
+prevBtn.addEventListener('click', () => {
+    if (images.length === 0) return;
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    updateImage();
+});
+nextBtn.addEventListener('click', () => {
+    if (images.length === 0) return;
+    currentIndex = (currentIndex + 1) % images.length;
+    updateImage();
+});
 
-    // 键盘左右键 / ESC 支持
-    document.addEventListener('keydown', function(e) {
-        if (!modal.classList.contains('active')) return;
-        if (e.key === 'ArrowLeft') prevBtn.click();
-        if (e.key === 'ArrowRight') nextBtn.click();
-        if (e.key === 'Escape') closeGallery();
-    });
-
-    // 监听容器滚动，同步 currentImageIndex（可选）
-    galleryContainer.addEventListener('scroll', () => {
-        const imgElements = galleryContainer.children;
-        if (imgElements.length === 0) return;
-        let closestIndex = 0;
-        let minDistance = Infinity;
-        const containerCenter = galleryContainer.scrollLeft + galleryContainer.clientWidth / 2;
-        Array.from(imgElements).forEach((img, idx) => {
-            const imgCenter = img.offsetLeft + img.clientWidth / 2;
-            const distance = Math.abs(containerCenter - imgCenter);
-            if (distance < minDistance) {
-                minDistance = distance;
-                closestIndex = idx;
-            }
-        });
-        currentImageIndex = closestIndex;
-    });
+// 键盘控制
+document.addEventListener('keydown', function(e) {
+    if (!modal.classList.contains('active')) return;
+    if (e.key === 'ArrowLeft') prevBtn.click();
+    if (e.key === 'ArrowRight') nextBtn.click();
+    if (e.key === 'Escape') closeGallery();
+});
 </script>
 
 </body>
