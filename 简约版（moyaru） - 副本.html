@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>OnedaySpring｜个人记录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Fonts（文艺感字体） -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Noto Serif SC", serif;
+            background-color: #faf9f7;
+            color: #2e2e2e;
+            line-height: 1.9;
+        }
+
+        header {
+            padding: 80px 20px 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-weight: 400;
+            font-size: 36px;
+            letter-spacing: 2px;
+        }
+
+        header p {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #777;
+        }
+
+        nav {
+            text-align: center;
+            padding: 20px 0;
+            border-top: 1px solid #e5e5e5;
+            border-bottom: 1px solid #e5e5e5;
+            margin-bottom: 40px;
+        }
+
+        nav a {
+            margin: 0 18px;
+            text-decoration: none;
+            color: #555;
+            font-size: 15px;
+        }
+
+        nav a:hover {
+            color: #000;
+        }
+
+        section {
+            max-width: 760px;
+            margin: 80px auto;
+            padding: 0 20px;
+        }
+
+        section h2 {
+            font-weight: 400;
+            font-size: 24px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        section h2::after {
+            content: "";
+            display: block;
+            width: 40px;
+            height: 1px;
+            background: #999;
+            margin-top: 10px;
+        }
+
+        article {
+            margin-bottom: 50px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        article h3 {
+            font-weight: 400;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        article p {
+            font-size: 15px;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        article a {
+            display: inline-block;
+            margin-right: 16px;
+            margin-top: 8px;
+            color: #2f6f9f;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        article a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            font-size: 13px;
+            color: #999;
+        }
+
+        /* ---------- 画廊弹窗样式 ---------- */
+        .gallery-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .gallery-modal.active {
+            display: flex;
+        }
+
+        .gallery-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 32px;
+            color: #fff;
+            cursor: pointer;
+            background: none;
+            border: none;
+            z-index: 1001;
+        }
+
+        .gallery-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            width: 90%;
+            max-width: 900px;
+            max-height: 80vh;
+            border-radius: 6px;
+            scroll-behavior: smooth;
+        }
+
+        .gallery-container img {
+            scroll-snap-align: center;
+            flex: 0 0 auto;
+            width: 100%;
+            max-height: 80vh;
+            object-fit: contain;
+            display: block;
+        }
+
+        .gallery-nav {
+            display: flex;
+            gap: 40px;
+            margin-top: 20px;
+        }
+
+        .gallery-nav button {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 32px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            line-height: 50px;
+            text-align: center;
+        }
+
+        .gallery-nav button:hover {
+            background: rgba(255,255,255,0.4);
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>OnedaySpring</h1>
+</header>
+
+<nav>
+    <a href="#portfolio">作品集</a>
+</nav>
+
+<!-- 作品集 -->
+<section id="portfolio">
+    <h2>作品集</h2>
+
+    <article>
+        <h3>01 平行回响</h3>
+        <p>灵魂伴侣设定 · r18，射精控制、道具</p>
+
+        <a href="https://archiveofourown.org/works/79059361/chapters/207395586" target="_blank">ao3 网站查看</a>
+        <!-- 长图查看：data-images 里写图片文件路径，用英文逗号分隔 -->
+        <a href="image/平行回响" class="gallery-trigger" 
+           data-images="image/平行回响/1-3.jpg,image/平行回响/4-5.jpg,image/平行回响/6.jpg,image/平行回响/7.jpg,image/平行回响/8.jpg">
+           长图查看
+        </a>
+    </article>
+
+    <article>
+        <h3>02 你的味道</h3>
+        <p>ABO设定，alpha植/beta井 · r18，微强制</p>
+
+        <a href="https://archiveofourown.org/works/79503066" target="_blank">ao3 网站查看</a>
+        <a href="image/你的味道" class="gallery-trigger" 
+           data-images="image/你的味道/1-2.jpg,image/你的味道/3-5.jpg,image/你的味道/6-7.jpg">
+           长图查看
+        </a>
+    </article>
+</section>
+
+<!-- 图片画廊弹窗（核心 HTML） -->
+<div id="gallery-modal" class="gallery-modal">
+    <button class="gallery-close">&times;</button>
+    <div class="gallery-container" id="gallery-images"></div>
+    <div class="gallery-nav">
+        <button id="gallery-prev">❮</button>
+        <button id="gallery-next">❯</button>
+    </div>
+</div>
+
+<footer>
+    © 2026 OnedaySpring · All writings reserved
+</footer>
+
+<script>
+    // 画廊逻辑
+    const modal = document.getElementById('gallery-modal');
+    const galleryContainer = document.getElementById('gallery-images');
+    const prevBtn = document.getElementById('gallery-prev');
+    const nextBtn = document.getElementById('gallery-next');
+    const closeBtn = document.querySelector('.gallery-close');
+
+    let currentImageIndex = 0;
+    let images = [];
+
+    // 打开画廊
+    document.querySelectorAll('.gallery-trigger').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const imagesStr = this.getAttribute('data-images');
+            if (!imagesStr) return;
+            images = imagesStr.split(',').map(s => s.trim());
+
+            // 清空并填充图片
+            galleryContainer.innerHTML = '';
+            images.forEach((src, index) => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = `图片 ${index + 1}`;
+                img.onerror = () => { img.alt = '图片加载失败'; };
+                galleryContainer.appendChild(img);
+            });
+
+            // 显示弹窗，并定位到第一张
+            modal.classList.add('active');
+            galleryContainer.scrollLeft = 0;
+            currentImageIndex = 0;
+        });
+    });
+
+    // 关闭画廊
+    function closeGallery() {
+        modal.classList.remove('active');
+    }
+    closeBtn.addEventListener('click', closeGallery);
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) closeGallery();
+    });
+
+    // 切换图片（定位到某一张）
+    function scrollToImage(index) {
+        if (images.length === 0) return;
+        if (index < 0) index = 0;
+        if (index >= images.length) index = images.length - 1;
+        const imgElements = galleryContainer.children;
+        if (imgElements.length > 0 && imgElements[index]) {
+            imgElements[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+        currentImageIndex = index;
+    }
+
+    prevBtn.addEventListener('click', () => {
+        scrollToImage(currentImageIndex - 1);
+    });
+    nextBtn.addEventListener('click', () => {
+        scrollToImage(currentImageIndex + 1);
+    });
+
+    // 键盘左右键 / ESC 支持
+    document.addEventListener('keydown', function(e) {
+        if (!modal.classList.contains('active')) return;
+        if (e.key === 'ArrowLeft') prevBtn.click();
+        if (e.key === 'ArrowRight') nextBtn.click();
+        if (e.key === 'Escape') closeGallery();
+    });
+
+    // 监听容器滚动，同步 currentImageIndex（可选）
+    galleryContainer.addEventListener('scroll', () => {
+        const imgElements = galleryContainer.children;
+        if (imgElements.length === 0) return;
+        let closestIndex = 0;
+        let minDistance = Infinity;
+        const containerCenter = galleryContainer.scrollLeft + galleryContainer.clientWidth / 2;
+        Array.from(imgElements).forEach((img, idx) => {
+            const imgCenter = img.offsetLeft + img.clientWidth / 2;
+            const distance = Math.abs(containerCenter - imgCenter);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestIndex = idx;
+            }
+        });
+        currentImageIndex = closestIndex;
+    });
+</script>
+
+</body>
+</html>
